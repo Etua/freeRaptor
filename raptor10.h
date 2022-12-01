@@ -29,8 +29,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include <gf2matrix.h>
-#include <raptor_consts.h> // J, C1 and C2
+#include "gf2matrix.h"
+#include "raptor_consts.h" // J, C1 and C2
 
 /** Type symbols is a Raptor 10 symbol: a K bytes array*/
 typedef uint8_t *Symbol;

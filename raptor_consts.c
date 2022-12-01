@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include <raptor_consts.h>
+#include "raptor_consts.h"
 
 const uint32_t J[] = {
     18,   14,   61,   46,   14,   22,   20,   40,   48,   1,    29,   40,

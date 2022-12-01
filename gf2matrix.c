@@ -16,7 +16,7 @@
  *  along with freeRaptor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <gf2matrix.h>
+#include "gf2matrix.h"
 #include <math.h>
 
 uint32_t wordsize = 8 * sizeof(word);

@@ -17,7 +17,7 @@
  */
 
 #include <math.h>
-#include <raptor10.h>
+#include "raptor10.h"
 #include <stdint.h>
 
 void generate_gray_seq(uint32_t *gray_seq) {
