@@ -31,6 +31,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#  ifdef  __cplusplus
+extern "C" {
+#  endif
+
 /** Typedef word: here as a uint32_t type */
 typedef uint32_t word;
 
@@ -160,5 +164,9 @@ void mat_mul(gf2matrix *matA, gf2matrix *matB, gf2matrix *result);
  * @return integer something NOT CLEAR
  */
 int gaussjordan_inv(gf2matrix *mat);
+
+#  ifdef  __cplusplus
+}
+#  endif
 
 #endif

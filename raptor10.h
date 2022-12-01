@@ -32,6 +32,10 @@
 #include "gf2matrix.h"
 #include "raptor_consts.h" // J, C1 and C2
 
+#  ifdef  __cplusplus
+extern "C" {
+#  endif
+
 /** Type symbols is a Raptor 10 symbol: a K bytes array*/
 typedef uint8_t *Symbol;
 
@@ -202,5 +206,9 @@ void r10_encode(uint8_t *src_s, uint8_t *enc_s, Raptor10 *obj, gf2matrix *A);
  */
 void r10_decode(uint8_t *enc_s, uint8_t *dec_s, Raptor10 *obj, gf2matrix *A,
                 uint32_t N_, uint32_t *ESIs);
+
+#  ifdef  __cplusplus
+}
+#  endif
 
 #endif
