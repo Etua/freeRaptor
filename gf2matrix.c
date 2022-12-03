@@ -19,6 +19,13 @@
 #include "gf2matrix.h"
 #include <math.h>
 
+#define min(a, b)                                                              \
+  ({                                                                           \
+    __typeof__(a) _a = (a);                                                    \
+    __typeof__(b) _b = (b);                                                    \
+    _a < _b ? _a : _b;                                                         \
+  })
+
 uint32_t wordsize = 8 * sizeof(word);
 uint32_t wordbitmask = 8 * sizeof(word);
 uint32_t wordshift = 5;
@@ -38,9 +45,9 @@ void allocate_gf2matrix(gf2matrix *mat, uint32_t n_rows, uint32_t n_cols) {
 }
 
 void dealloc_gf2matrix(gf2matrix *mat) {
-  for (int i = 0; i <= mat->n_rows; i++) {
+  for (int i = 0; i <= mat->n_rows; i++)
     free(mat->rows[i]);
-  }
+
   free(mat->rows);
 }
 
@@ -91,6 +98,13 @@ void swap_cols(gf2matrix *mat, int m, int k) {
   }
 }
 
+void create_identity_matrix(gf2matrix *identity, uint32_t ncols,
+                            uint32_t nrows) {
+  allocate_gf2matrix(identity, nrows, ncols);
+  for (int i = 0; i < min(ncols, nrows); i++)
+    set_entry(identity, i, i, 1);
+}
+
 void mat_mul(gf2matrix *matA, gf2matrix *matB, gf2matrix *result) {
   int part;
   uint32_t ncols_A = get_ncols(matA);
@@ -110,16 +124,7 @@ void mat_mul(gf2matrix *matA, gf2matrix *matB, gf2matrix *result) {
 
 int gaussjordan_inv(gf2matrix *mat) {
   gf2matrix identity;
-  allocate_gf2matrix(&identity, get_nrows(mat), get_ncols(mat));
-
-  uint32_t nrows_identity = get_nrows(&identity);
-  uint32_t ncols_identity = get_ncols(&identity);
-  for (int i = 0; i < nrows_identity; i++) {
-    for (int j = 0; j < ncols_identity; j++) {
-      if (i == j)
-        set_entry(&identity, i, j, 1);
-    }
-  }
+  create_identity_matrix(&identity, get_ncols(mat), get_nrows(mat));
 
   uint32_t nrows_mat = get_nrows(mat);
   uint32_t ncols_mat = get_ncols(mat);
@@ -132,17 +137,13 @@ int gaussjordan_inv(gf2matrix *mat) {
       swap_rows(mat, i, j);
     swap_rows(&identity, i, j);
 
-    for (int k = 0; k < nrows_mat; k++) {
-      if (k != i) {
-        if (get_entry(mat, k, i)) {
-          for (int l = 0; l < nwords_mat; l++) {
-            mat->rows[k][l] = mat->rows[k][l] ^ mat->rows[i][l];
-            (&identity)->rows[k][l] =
-                (&identity)->rows[k][l] ^ (&identity)->rows[i][l];
-          }
+    for (int k = 0; k < nrows_mat; k++)
+      if (k != i && get_entry(mat, k, i))
+        for (int l = 0; l < nwords_mat; l++) {
+          mat->rows[k][l] = mat->rows[k][l] ^ mat->rows[i][l];
+          (&identity)->rows[k][l] =
+              (&identity)->rows[k][l] ^ (&identity)->rows[i][l];
         }
-      }
-    }
   }
 
   *mat = identity;
